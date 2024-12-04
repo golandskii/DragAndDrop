@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draggable Objects</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+
+        .draggable {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+        }
+
+        #object1 {
+            background-color: red;
+        }
+
+        #object2 {
+            background-color: blue;
+        }
+
+        #object3 {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="object1" class="draggable"></div>
+    <div id="object2" class="draggable"></div>
+    <div id="object3" class="draggable"></div>
+
+    <script>
+        // Функція для переміщення об'єкта
+        function makeDraggable(element) {
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            element.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+                element.style.zIndex = 1000; // Піднімаємо об'єкт, коли він перетягується
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    let x = e.clientX - offsetX;
+                    let y = e.clientY - offsetY;
+
+                    // Обмежуємо переміщення в межах вікна
+                    x = Math.max(0, Math.min(window.innerWidth - element.offsetWidth, x));
+                    y = Math.max(0, Math.min(window.innerHeight - element.offsetHeight, y));
+
+                    element.style.left = `${x}px`;
+                    element.style.top = `${y}px`;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                element.style.zIndex = 1; // Повертаємо об'єкт на його місце
+            });
+        }
+
+        // Застосовуємо функцію до кожного об'єкта
+        makeDraggable(document.getElementById('object1'));
+        makeDraggable(document.getElementById('object2'));
+        makeDraggable(document.getElementById('object3'));
+    </script>
+
+</body>
+</html>
